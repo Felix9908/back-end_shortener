@@ -11,10 +11,10 @@ const secret_key = keys.key;
 
 // Configuración de la base de datos
 const db = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "acortador",
+    host: "sql9.freemysqlhosting.net",
+    user: "sql9648511",
+    password: "CaTi7kel3Y",
+    database: "sql9648511",
 });
 
 async function checkDatabaseConnection() {

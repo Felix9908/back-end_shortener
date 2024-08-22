@@ -1,4 +1,5 @@
 import mysql2 from "mysql2";
+import { db } from "./app.js";
 
 export const PORT = process.env.PORT || 9999;
 

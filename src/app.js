@@ -14,5 +14,5 @@ checkDatabaseConnection();
 // Iniciar el servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Servidor en funcionamiento en el puerto ${PORT}`);
+  console.log(`The server is listening to the port: ${PORT}`);
 });

@@ -1,7 +1,7 @@
 import mysql2 from "mysql2";
 import { db } from "./app.js";
 
-export const PORT = process.env.PORT || 9999;
+export const PORT = process.env.PORT || 3000;
 
 const DB_HOST = process.env.DB_HOST || "localhost";
 const DB_USER = process.env.DB_USER || "root";

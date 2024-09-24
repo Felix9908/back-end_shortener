@@ -22,7 +22,7 @@ module.exports = {
         allowNull: false,
         unique: true
       },
-      last_name: {
+      full_name: {
         type: Sequelize.STRING
       },
       address1: {

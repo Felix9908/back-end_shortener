@@ -107,10 +107,13 @@ export const toggleUserActiveStatus = async (req, res) => {
       return res.status(404).json({ success: false, message: "Usuario no encontrado." });
     }
 
-    // Cambiamos el estado del usuario
     user.is_active = newStatus;
-    await user.save(); // Guardamos los cambios en la base de datos
-
+    try {
+      await user.save();
+    } catch (error) {
+      console.error("Error al guardar los cambios en la base de datos:", error);
+      return res.status(500).json({ success: false, message: "Error al guardar los cambios en la base de datos." });
+    }
     return res.status(200).json({
       success: true,
       message: `El usuario ha sido ${newStatus ? 'activado' : 'desactivado'} exitosamente.`,

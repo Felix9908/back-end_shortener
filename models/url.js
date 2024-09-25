@@ -18,6 +18,7 @@ export default (sequelize, DataTypes) => {
     original_url: DataTypes.TEXT,
     short_code: DataTypes.STRING,
     expires_at: DataTypes.DATE,
+    description: DataTypes.TEXT,
     user_id: DataTypes.INTEGER
   }, {
     sequelize,

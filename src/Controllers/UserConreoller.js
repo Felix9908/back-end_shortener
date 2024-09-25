@@ -128,3 +128,41 @@ export const toggleUserActiveStatus = async (req, res) => {
     return res.status(500).json({ success: false, message: "Error en el servidor." });
   }
 };
+
+export const deleteUser = async (req, res) => {
+  const { token } = req.headers; 
+  const { userId } = req.body; 
+
+  if (!token) {
+    return res.status(401).json({ success: false, message: "Token no proporcionado." });
+  }
+
+  try {
+    // Verificar y decodificar el token para asegurarnos de que el usuario tenga permisos
+    const decoded = jwt.verify(token, secret_key);
+    const userType = decoded.user_type;
+
+    // Comprobamos si el usuario es administrador o si es el mismo usuario el que se va a eliminar
+    if (userType !== 'admin' && decoded.userId !== userId) {
+      return res.status(403).json({ success: false, message: "Acceso denegado. No tienes permisos para eliminar este usuario." });
+    }
+
+    // Buscar el usuario por su ID
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "Usuario no encontrado." });
+    }
+
+    // Eliminar el usuario
+    await user.destroy();
+
+    return res.status(200).json({
+      success: true,
+      message: "Usuario eliminado exitosamente."
+    });
+  } catch (error) {
+    console.error("Error al eliminar usuario:", error);
+    return res.status(500).json({ success: false, message: "Error al eliminar el usuario." });
+  }
+};

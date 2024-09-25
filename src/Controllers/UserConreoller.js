@@ -37,13 +37,15 @@ export const createAccount = async (req, res) => {
 export const updateUserDetails = async (req, res) => {
   const { token } = req.headers; 
   const {
-    formadepago,
-    direccionParticular,
-    telephoneNumber,
-    ciudad,
-    nombreCompleto,
-    estado,
-    pais
+    withdrawal_method,
+    withdrawal_account,
+    address1,
+    address2,
+    mobile,
+    city,
+    full_name,
+    state,
+    country
   } = req.body;
 
   if (!token) {
@@ -64,13 +66,15 @@ export const updateUserDetails = async (req, res) => {
 
     // Actualizar solo los campos proporcionados
     await user.update({
-      withdrawal_method: formadepago || user.withdrawal_method,
-      address1: direccionParticular || user.address1,
-      mobile: telephoneNumber || user.mobile,
-      city: ciudad || user.city,
-      full_name: nombreCompleto || user.last_name,
-      state: estado || user.state,
-      country: pais || user.country,
+      withdrawal_method: withdrawal_method || user.withdrawal_method,
+      withdrawal_account: withdrawal_account || user.withdrawal_account,
+      address1: address1 || user.address1,
+      address2: address2 || user.address2,
+      mobile: mobile || user.mobile,
+      city: city || user.city,
+      full_name: full_name || user.last_name,
+      state: state || user.state,
+      country: country || user.country,
     });
 
     res.status(200).send("Datos del usuario actualizados correctamente");

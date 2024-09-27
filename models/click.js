@@ -4,10 +4,7 @@ import { Model } from 'sequelize';
 export default (sequelize, DataTypes) => {
   class Click extends Model {
     static associate(models) {
-      // Asociación con Url
       Click.belongsTo(models.Url, { foreignKey: 'url_id' });
-      
-      // Asociación con User
       Click.belongsTo(models.User, { foreignKey: 'user_id' });
     }
   }
@@ -20,6 +17,7 @@ export default (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Click',
+    underscored: true, 
   });
   return Click;
 };

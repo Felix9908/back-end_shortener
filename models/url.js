@@ -4,22 +4,17 @@ import { Model } from 'sequelize';
 export default (sequelize, DataTypes) => {
   class Url extends Model {
     static associate(models) {
-      // Asociación con User
-      Url.belongsTo(models.User, { foreignKey: 'user_id' });
-      
-      // Asociación con Click
-      Url.hasMany(models.Click, { foreignKey: 'url_id' });
-      
-      // Asociación con UrlStat
-      Url.hasOne(models.UrlStat, { foreignKey: 'url_id' });
+      Url.belongsTo(models.User, { foreignKey: 'userId' });
+      Url.hasMany(models.Click, { foreignKey: 'urlId' });
+      Url.hasOne(models.UrlStat, { foreignKey: 'urlId' });
     }
   }
   Url.init({
-    original_url: DataTypes.TEXT,
-    short_code: DataTypes.STRING,
-    expires_at: DataTypes.DATE,
+    originalUrl: DataTypes.TEXT,
+    shortCode: DataTypes.STRING,
+    expiresAt: DataTypes.DATE,
     description: DataTypes.TEXT,
-    user_id: DataTypes.INTEGER
+    userId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Url',

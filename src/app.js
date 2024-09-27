@@ -1,10 +1,11 @@
 import express from "express";
 import cors from "cors";
 import db from '../models/index.js'; 
-
+import routes from './Routes/routes.js'; 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Middlewares
 app.use(express.json());
 app.use(cors());
 
@@ -15,6 +16,10 @@ db.sequelize.authenticate()
     return db.sequelize.sync(); // Sincroniza los modelos con la base de datos
   })
   .then(() => {
+    // Carga las rutas desde routes.js
+    app.use(routes);
+
+    // Inicia el servidor
     app.listen(PORT, () => {
       console.log(`El servidor está escuchando en el puerto: ${PORT}`);
     });

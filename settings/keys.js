@@ -1,3 +1,3 @@
-module.exports = {
-    key: "llavesecretadelacortadorqueesimposibledeobtelerporqueamimedalaganawakakakakaka"
-}
+export const keys = {
+    key: "llavesecretadelacortadorqueesimposibledeobtelerporqueamñimedalaganawakakakakaka"
+};

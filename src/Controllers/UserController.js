@@ -1,30 +1,31 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { User } from "../../models/user.js";
-import keys from "../../settings/keys.js";
+import db from "../../models/index.js";
+import { keys } from "../../settings/keys.js";
 
 const secret_key = keys.key;
+const User = db.User;
 
 export const createAccount = async (req, res) => {
   const { user, password, email } = req.body;
 
   if (!user || !password || !email) {
-    return res.status(400).send("Nombre de usuario, correo y contraseña son obligatorios.");
+    return res
+      .status(400)
+      .send("Nombre de usuario, correo y contraseña son obligatorios.");
   }
 
   try {
-    // Encriptar la contraseña
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(password, salt);
 
-    // Crear el nuevo usuario con datos básicos
     await User.create({
       username: user,
       password_hash: hashedPassword,
       email,
-      is_active: true,  
-      user_type: 'worker',
-      created_at: new Date(),
+      is_active: true,
+      user_type: "worker",
+      createdAt: new Date(),
     });
 
     res.status(200).send("Usuario registrado exitosamente");
@@ -35,7 +36,7 @@ export const createAccount = async (req, res) => {
 };
 
 export const updateUserDetails = async (req, res) => {
-  const { token } = req.headers; 
+  const { token } = req.headers;
   const {
     withdrawal_method,
     withdrawal_account,
@@ -45,11 +46,13 @@ export const updateUserDetails = async (req, res) => {
     city,
     full_name,
     state,
-    country
+    country,
   } = req.body;
 
   if (!token) {
-    return res.status(401).json({ success: false, message: "Token no proporcionado." });
+    return res
+      .status(401)
+      .json({ success: false, message: "Token no proporcionado." });
   }
 
   try {
@@ -75,6 +78,7 @@ export const updateUserDetails = async (req, res) => {
       full_name: full_name || user.last_name,
       state: state || user.state,
       country: country || user.country,
+      updatedAt: new Date(),
     });
 
     res.status(200).send("Datos del usuario actualizados correctamente");
@@ -86,29 +90,39 @@ export const updateUserDetails = async (req, res) => {
 
 // Función para cambiar el estado activo del usuario (solo admins)
 export const toggleUserActiveStatus = async (req, res) => {
-  const { token } = req.headers; 
-  const { newStatus } = req.body; 
+  const { token } = req.headers;
+  const { newStatus } = req.body;
 
   if (!token) {
-    return res.status(401).json({ success: false, message: "Token no proporcionado." });
+    return res
+      .status(401)
+      .json({ success: false, message: "Token no proporcionado." });
   }
 
   try {
     // Verificar y decodificar el token
     const decoded = jwt.verify(token, secret_key);
     const userType = decoded.user_type;
-    const userId = decoded.userId
+    const userId = decoded.userId;
 
     // Comprobamos si el usuario es administrador
-    if (userType !== 'admin') {
-      return res.status(403).json({ success: false, message: "Acceso denegado. Solo los administradores pueden realizar esta acción." });
+    if (userType !== "admin") {
+      return res
+        .status(403)
+        .json({
+          success: false,
+          message:
+            "Acceso denegado. Solo los administradores pueden realizar esta acción.",
+        });
     }
 
     // Buscamos el usuario al que se le va a cambiar el estado
     const user = await User.findByPk(userId);
 
     if (!user) {
-      return res.status(404).json({ success: false, message: "Usuario no encontrado." });
+      return res
+        .status(404)
+        .json({ success: false, message: "Usuario no encontrado." });
     }
 
     user.is_active = newStatus;
@@ -116,11 +130,18 @@ export const toggleUserActiveStatus = async (req, res) => {
       await user.save();
     } catch (error) {
       console.error("Error al guardar los cambios en la base de datos:", error);
-      return res.status(500).json({ success: false, message: "Error al guardar los cambios en la base de datos." });
+      return res
+        .status(500)
+        .json({
+          success: false,
+          message: "Error al guardar los cambios en la base de datos.",
+        });
     }
     return res.status(200).json({
       success: true,
-      message: `El usuario ha sido ${newStatus ? 'activado' : 'desactivado'} exitosamente.`,
+      message: `El usuario ha sido ${
+        newStatus ? "activado" : "desactivado"
+      } exitosamente.`,
       user: {
         id: user.id,
         username: user.username,
@@ -129,16 +150,20 @@ export const toggleUserActiveStatus = async (req, res) => {
     });
   } catch (error) {
     console.error("Error en el servidor:", error);
-    return res.status(500).json({ success: false, message: "Error en el servidor." });
+    return res
+      .status(500)
+      .json({ success: false, message: "Error en el servidor." });
   }
 };
 
 export const deleteUser = async (req, res) => {
-  const { token } = req.headers; 
-  const { userId } = req.body; 
+  const { token } = req.headers;
+  const { userId } = req.body;
 
   if (!token) {
-    return res.status(401).json({ success: false, message: "Token no proporcionado." });
+    return res
+      .status(401)
+      .json({ success: false, message: "Token no proporcionado." });
   }
 
   try {
@@ -147,15 +172,23 @@ export const deleteUser = async (req, res) => {
     const userType = decoded.user_type;
 
     // Comprobamos si el usuario es administrador o si es el mismo usuario el que se va a eliminar
-    if (userType !== 'admin' && decoded.userId !== userId) {
-      return res.status(403).json({ success: false, message: "Acceso denegado. No tienes permisos para eliminar este usuario." });
+    if (userType !== "admin" && decoded.userId !== userId) {
+      return res
+        .status(403)
+        .json({
+          success: false,
+          message:
+            "Acceso denegado. No tienes permisos para eliminar este usuario.",
+        });
     }
 
     // Buscar el usuario por su ID
     const user = await User.findByPk(userId);
 
     if (!user) {
-      return res.status(404).json({ success: false, message: "Usuario no encontrado." });
+      return res
+        .status(404)
+        .json({ success: false, message: "Usuario no encontrado." });
     }
 
     // Eliminar el usuario
@@ -163,10 +196,12 @@ export const deleteUser = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Usuario eliminado exitosamente."
+      message: "Usuario eliminado exitosamente.",
     });
   } catch (error) {
     console.error("Error al eliminar usuario:", error);
-    return res.status(500).json({ success: false, message: "Error al eliminar el usuario." });
+    return res
+      .status(500)
+      .json({ success: false, message: "Error al eliminar el usuario." });
   }
 };

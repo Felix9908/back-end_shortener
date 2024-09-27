@@ -13,7 +13,7 @@ module.exports = {
         allowNull: false,
         unique: true
       },
-      password_hash: {
+      password_hash: { 
         type: Sequelize.STRING,
         allowNull: false
       },
@@ -52,11 +52,11 @@ module.exports = {
       CPM: {
         type: Sequelize.DECIMAL(10, 2)
       },
-      is_active: {
+      is_active: { // Cambiar isActive a is_active
         type: Sequelize.BOOLEAN,
         defaultValue: true
       },
-      user_type: {
+      user_type: { // Cambiar userType a user_type
         type: Sequelize.ENUM('admin', 'worker'),
         allowNull: false,
         defaultValue: 'worker'

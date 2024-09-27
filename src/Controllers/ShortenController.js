@@ -1,5 +1,7 @@
-import { shortenUrl } from "../Services/ShortenUrlService";
-import { Url, Click, UrlStat } from '../../models';  // Asegúrate de importar los modelos correctos
+import { shortenUrl } from "../Services/ShortenUrlService.js";
+import Url from '../../models/url.js';
+import Click from '../../models/click.js';
+import UrlStat from '../../models/UrlStat.js';
 
 // Acortar URL
 export const shorten = async (req, res) => {

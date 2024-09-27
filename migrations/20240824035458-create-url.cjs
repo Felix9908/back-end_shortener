@@ -1,48 +1,52 @@
-'use strict';
+"use strict";
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Urls', {
+    await queryInterface.createTable("Urls", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
-      original_url: {
+      originalUrl: {
         type: Sequelize.TEXT,
-        allowNull: false
+        allowNull: false,
       },
-      short_code: {
+      description: {
+        type: Sequelize.TEXT,
+        allowNull: false,
+      },
+      shortCode: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true
+        unique: true,
       },
-      expires_at: {
-        type: Sequelize.DATE
+      expiresAt: {
+        type: Sequelize.DATE,
       },
-      user_id: {
+      userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Users', 
-          key: 'id'
+          model: "Users",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
-      created_at: {
+      createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
-      updated_at: {
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-      }
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Urls');
-  }
+    await queryInterface.dropTable("Urls");
+  },
 };

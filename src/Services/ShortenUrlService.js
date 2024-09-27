@@ -1,5 +1,5 @@
-const { Url } = require('../../models');
-const crypto = require('crypto');
+import url from '../../models/url.js';
+import crypto from 'crypto'
 
 // Genera un código corto único (hexadecimal)
 const generateShortCode = () => {
@@ -14,11 +14,11 @@ export const shortenUrl = async (originalUrl, userId, expiresAt = null) => {
   // Generar un código corto único
   while (urlExists) {
     shortCode = generateShortCode();
-    urlExists = await Url.findOne({ where: { short_code: shortCode } });
+    urlExists = await url.findOne({ where: { short_code: shortCode } });
   }
 
   // Guardar la URL acortada en la base de datos
-  const shortenedUrl = await Url.create({
+  const shortenedUrl = await url.create({
     original_url: originalUrl,
     short_code: shortCode,
     user_id: userId,

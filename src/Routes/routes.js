@@ -1,22 +1,26 @@
-import { login } from "../Controllers/AuthController";
-import { logOut } from "../Controllers/AuthController";
-import { verifyToken } from "../Controllers/Middleware/VerifyToken";
-import { shortCode, shorten, getAllShortenedUrls, deleteShortenedUrl, editShortenedUrl } from "../Controllers/ShortenController";
-import { createAccount, updateUserDetails, toggleUserActiveStatus, deleteUser} from "../Controllers/UserConreoller";
+import express from "express";
+import { login, logOut } from "../Controllers/AuthController.js";
+import { verifyToken } from "../Controllers/Middleware/VerifyToken.js";
+import { shortCode, shorten, getAllShortenedUrls, deleteShortenedUrl, editShortenedUrl } from "../Controllers/ShortenController.js";
+import { createAccount, updateUserDetails, toggleUserActiveStatus, deleteUser } from "../Controllers/UserController.js";
 
-//login routes
-app.post("/login", login);
-app.put("/logout", verifyToken, logOut);
+const router = express.Router();
 
-//User routes
-app.post("/createAccount", createAccount);
-app.post("/toggleUserActiveStatus", verifyToken, toggleUserActiveStatus);
-app.put("/updateUserDetails", updateUserDetails);
-app.delete("/deleteUser", deleteUser);
+// Login routes
+router.post("/login", login);
+router.put("/logout", verifyToken, logOut);
 
-//Shorten Url
-app.post("/shorten", verifyToken, shorten);
-app.get("/:shortCode", shortCode);
-app.get("/getAllShortenedUrls", verifyToken, getAllShortenedUrls);
-app.delete("/deleteShortenedUrl", verifyToken, deleteShortenedUrl);
-app.put("/editShortenedUrl", verifyToken, editShortenedUrl);
+// User routes
+router.post("/createAccount", createAccount);
+router.post("/toggleUserActiveStatus", verifyToken, toggleUserActiveStatus);
+router.put("/updateUserDetails", updateUserDetails);
+router.delete("/deleteUser", deleteUser);
+
+// Shorten URL routes
+router.post("/shorten", verifyToken, shorten);
+router.get("/:shortCode", shortCode);
+router.get("/getAllShortenedUrls", verifyToken, getAllShortenedUrls);
+router.delete("/deleteShortenedUrl", verifyToken, deleteShortenedUrl);
+router.put("/editShortenedUrl", verifyToken, editShortenedUrl);
+
+export default router; 

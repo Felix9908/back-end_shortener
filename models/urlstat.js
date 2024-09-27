@@ -4,7 +4,6 @@ import { Model } from 'sequelize';
 export default (sequelize, DataTypes) => {
   class UrlStat extends Model {
     static associate(models) {
-      // Asociación con Url
       UrlStat.belongsTo(models.Url, { foreignKey: 'url_id' });
     }
   }
@@ -15,6 +14,7 @@ export default (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'UrlStat',
+    underscored: true, 
   });
   return UrlStat;
 };

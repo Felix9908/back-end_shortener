@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { User } from "../../models/user.js";
-import keys from "../../settings/keys.js";
+import User from "../../models/user.js";
+import { keys } from "../../settings/keys.js";
 
 const secret_key = keys.key;
 
@@ -14,7 +14,9 @@ export const login = async (req, res) => {
 
     if (!user) {
       // Si el usuario no existe
-      return res.status(401).json({ success: false, message: "Usuario no encontrado." });
+      return res
+        .status(401)
+        .json({ success: false, message: "Usuario no encontrado." });
     }
 
     // Compara la contraseña proporcionada con la contraseña almacenada
@@ -22,7 +24,9 @@ export const login = async (req, res) => {
 
     if (!passwordMatch) {
       // Si las contraseñas no coinciden
-      return res.status(401).json({ success: false, message: "Credenciales incorrectas." });
+      return res
+        .status(401)
+        .json({ success: false, message: "Credenciales incorrectas." });
     }
 
     // Genera el token JWT e incluye el tipo de usuario (admin o worker)
@@ -31,12 +35,14 @@ export const login = async (req, res) => {
       userId: user.id,
       username: user.username,
       email: user.email,
-      userType: user.user_type 
+      userType: user.user_type,
     };
 
-    jwt.sign(payload, secret_key, { expiresIn: '30d' }, (err, token) => {
+    jwt.sign(payload, secret_key, { expiresIn: "30d" }, (err, token) => {
       if (err) {
-        res.status(500).json({ success: false, message: "Error al generar el token." });
+        res
+          .status(500)
+          .json({ success: false, message: "Error al generar el token." });
       } else {
         res.status(200).json({
           success: true,
@@ -45,7 +51,7 @@ export const login = async (req, res) => {
           userData: {
             username: user.username,
             email: user.email,
-            userType: user.user_type
+            userType: user.user_type,
           },
         });
       }
@@ -58,16 +64,18 @@ export const login = async (req, res) => {
 
 export const logOut = (req, res) => {
   const authHeader = req.headers["authorization"];
-  
+
   if (!authHeader) {
-    return res.status(401).send({ msg: "No se proporcionó token de autenticación" });
+    return res
+      .status(401)
+      .send({ msg: "No se proporcionó token de autenticación" });
   }
 
   // Extraemos el token del encabezado "Bearer token"
   const token = authHeader.split(" ")[1];
 
   // Cambiamos la expiración del token a 1 segundo
-  jwt.sign({ token }, secret_key, { expiresIn: '1s' }, (err, newToken) => {
+  jwt.sign({ token }, secret_key, { expiresIn: "1s" }, (err, newToken) => {
     if (err) {
       res.status(500).send({ msg: "Error al cerrar sesión" });
     } else {

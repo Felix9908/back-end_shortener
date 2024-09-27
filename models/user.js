@@ -4,18 +4,15 @@ import { Model } from 'sequelize';
 export default (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      // Asociación con Url
       User.hasMany(models.Url, { foreignKey: 'user_id' });
-      
-      // Asociación con Click
       User.hasMany(models.Click, { foreignKey: 'user_id' });
     }
   }
   User.init({
     username: DataTypes.STRING,
-    password_hash: DataTypes.STRING,
+    password_hash: DataTypes.STRING, 
     email: DataTypes.STRING,
-    full_name: DataTypes.STRING,
+    full_name: DataTypes.STRING, 
     address1: DataTypes.STRING,
     address2: DataTypes.STRING,
     city: DataTypes.STRING,
@@ -24,13 +21,15 @@ export default (sequelize, DataTypes) => {
     mobile: DataTypes.STRING,
     withdrawal_method: DataTypes.STRING,
     withdrawal_account: DataTypes.STRING,
-    CPM: DataTypes.DECIMAL,
-    is_active: DataTypes.BOOLEAN,
+    CPM: DataTypes.DECIMAL(10, 2),
+    is_active: DataTypes.BOOLEAN, 
     user_type: DataTypes.ENUM('admin', 'worker'),
-    created_at: DataTypes.DATE
+    created_at: DataTypes.DATE, 
+    updated_at: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'User',
+    underscored: true, 
   });
   return User;
 };

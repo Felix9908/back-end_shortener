@@ -1,9 +1,10 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import User from "../../models/user.js";
+import db from "../../models/index.js";
 import { keys } from "../../settings/keys.js";
 
 const secret_key = keys.key;
+const User = db.User;
 
 export const login = async (req, res) => {
   const { username, password } = req.body;

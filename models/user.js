@@ -24,12 +24,12 @@ export default (sequelize, DataTypes) => {
     CPM: DataTypes.DECIMAL(10, 2),
     is_active: DataTypes.BOOLEAN, 
     user_type: DataTypes.ENUM('admin', 'worker'),
-    created_at: DataTypes.DATE, 
-    updated_at: DataTypes.DATE
+    createdAt: DataTypes.DATE, 
+    updatedAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'User',
-    underscored: true, 
+    underscored: false, 
   });
   return User;
 };

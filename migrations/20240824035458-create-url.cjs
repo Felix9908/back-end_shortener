@@ -21,9 +21,6 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
-      expiresAt: {
-        type: Sequelize.DATE,
-      },
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,

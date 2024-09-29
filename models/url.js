@@ -12,7 +12,6 @@ export default (sequelize, DataTypes) => {
   Url.init({
     originalUrl: DataTypes.TEXT,
     shortCode: DataTypes.STRING,
-    expiresAt: DataTypes.DATE,
     description: DataTypes.TEXT,
     userId: DataTypes.INTEGER
   }, {

@@ -14,7 +14,7 @@ export default (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'UrlStat',
-    underscored: true, 
+    underscored: false, 
   });
   return UrlStat;
 };

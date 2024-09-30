@@ -20,23 +20,23 @@ CREATE TABLE users (
 
 CREATE TABLE urls (
     id INT AUTO_INCREMENT PRIMARY KEY,            
-    original_url TEXT NOT NULL,               
-    short_code VARCHAR(10) NOT NULL UNIQUE,   
+    originalUrl TEXT NOT NULL,               
+    shortCode VARCHAR(10) NOT NULL UNIQUE,   
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     expires_at DATETIME,
-    user_id INT NOT NULL,                            
-    FOREIGN KEY (user_id) REFERENCES users(id)        
+    userId INT NOT NULL,                            
+    FOREIGN KEY (userId) REFERENCES users(id)        
 );
 
 CREATE TABLE clicks (
     id INT AUTO_INCREMENT PRIMARY KEY,
     url_id INT NOT NULL,
-    user_id INT,
+    userId INT,
     clicked_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     ip_address VARCHAR(45),
     user_agent TEXT,
     FOREIGN KEY (url_id) REFERENCES urls(id),
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (userId) REFERENCES users(id)
 );
 
 CREATE TABLE url_stats (

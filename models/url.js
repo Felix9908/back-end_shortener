@@ -13,10 +13,15 @@ export default (sequelize, DataTypes) => {
     originalUrl: DataTypes.TEXT,
     shortCode: DataTypes.STRING,
     description: DataTypes.TEXT,
-    userId: DataTypes.INTEGER
+    userId: {
+      type: DataTypes.INTEGER,
+      field: 'userId'  
+    }
   }, {
     sequelize,
     modelName: 'Url',
+    tableName: 'urls',
+    underscored: false,
   });
   return Url;
 };

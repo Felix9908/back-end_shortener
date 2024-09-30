@@ -4,8 +4,8 @@ import { Model } from 'sequelize';
 export default (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      User.hasMany(models.Url, { foreignKey: 'user_id' });
-      User.hasMany(models.Click, { foreignKey: 'user_id' });
+      User.hasMany(models.Url, { foreignKey: 'userId' });
+      User.hasMany(models.Click, { foreignKey: 'userId' });
     }
   }
   User.init({

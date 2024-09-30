@@ -13,7 +13,7 @@ router.put("/logout", verifyToken, logOut);
 // User routes
 router.post("/createAccount", createAccount);
 router.post("/toggleUserActiveStatus", verifyToken, toggleUserActiveStatus);
-router.put("/updateUserDetails", updateUserDetails);
+router.put("/updateUserDetails", verifyToken, updateUserDetails);
 router.delete("/deleteUser", deleteUser);
 
 // Shorten URL routes

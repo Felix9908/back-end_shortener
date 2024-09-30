@@ -1,7 +1,7 @@
 import express from "express";
 import { login, logOut } from "../Controllers/AuthController.js";
 import { verifyToken } from "../Controllers/Middleware/VerifyToken.js";
-import { shortCode, shorten, getAllShortenedUrls, deleteShortenedUrl, editShortenedUrl, redirectToOriginalUrl} from "../Controllers/ShortenController.js";
+import { shorten, getAllShortenedUrls, deleteShortenedUrl, editShortenedUrl, redirectToOriginalUrl} from "../Controllers/ShortenController.js";
 import { createAccount, updateUserDetails, toggleUserActiveStatus, deleteUser } from "../Controllers/UserController.js";
 
 const router = express.Router();
@@ -21,7 +21,6 @@ router.post("/shorten", verifyToken, shorten);
 router.get("/getAllShortenedUrls", verifyToken, getAllShortenedUrls);
 router.delete("/deleteShortenedUrl", verifyToken, deleteShortenedUrl);
 router.put("/editShortenedUrl", verifyToken, editShortenedUrl);
-router.get("/:shortCode", shortCode); 
 router.get("/redirect/:shortCode", redirectToOriginalUrl);
 
 export default router; 

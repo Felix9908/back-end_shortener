@@ -13,6 +13,8 @@ export default (sequelize, DataTypes) => {
     originalUrl: DataTypes.TEXT,
     shortCode: DataTypes.STRING,
     description: DataTypes.TEXT,
+    newsType: DataTypes.STRING,  
+    domain: DataTypes.STRING,    
     userId: {
       type: DataTypes.INTEGER,
       field: 'userId'  

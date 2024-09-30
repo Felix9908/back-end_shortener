@@ -21,6 +21,14 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
+      newsType: {   // Nuevo campo
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      domain: {    // Nuevo campo
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,

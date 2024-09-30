@@ -7,7 +7,7 @@ const generateShortCode = () => {
 };
 
 // Servicio para acortar URL
-export const shortenUrl = async (originalUrl, userId, description = null) => {
+export const shortenUrl = async (originalUrl, userId, description, domain, newsType = null) => {
   const url = db.Url;
 
   // Comprobar si la URL ya fue acortada por este usuario
@@ -30,6 +30,8 @@ export const shortenUrl = async (originalUrl, userId, description = null) => {
     shortCode: shortCode,
     userId: userId,
     description: description,
+    domain: domain,
+    newsType: newsType
   });
 
   return shortenedUrl;

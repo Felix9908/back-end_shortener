@@ -36,7 +36,7 @@ export const createAccount = async (req, res) => {
 };
 
 export const updateUserDetails = async (req, res) => {
-  const { token } = req.headers;
+  const token = req.headers["authorization"]?.split(" ")[1];
   const {
     withdrawal_method,
     withdrawal_account,

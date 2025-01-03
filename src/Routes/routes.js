@@ -30,7 +30,7 @@ router.get("/auth/check", authcheck)
 // User routes
 router.post("/createAccount", createAccount);
 router.post("/toggleUserActiveStatus", verifyToken, toggleUserActiveStatus);
-router.put("/updateUserDetails", updateUserDetails);
+router.put("/updateUserDetails", verifyToken, updateUserDetails);
 router.delete("/deleteUser", deleteUser);
 
 // Shorten URL routes

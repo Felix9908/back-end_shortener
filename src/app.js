@@ -1,13 +1,27 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import db from '../models/index.js'; 
 import routes from './Routes/routes.js'; 
+import fs from "fs";
+import https from "https";  // Importamos el módulo https
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middlewares
 app.use(express.json());
-app.use(cors());
+app.use(cookieParser());
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+}));
+
+// Configuración de certificados SSL
+const options = {
+  key: fs.readFileSync("./certs/server.key"),  // Ruta al archivo de la clave privada
+  cert: fs.readFileSync("./certs/server.cert"),  // Ruta al archivo del certificado
+};
 
 // Conexión y sincronización con Sequelize
 db.sequelize.authenticate()
@@ -19,9 +33,9 @@ db.sequelize.authenticate()
     // Carga las rutas desde routes.js
     app.use(routes);
 
-    // Inicia el servidor
-    app.listen(PORT, () => {
-      console.log(`El servidor está escuchando en el puerto: ${PORT}`);
+    // Inicia el servidor HTTPS
+    https.createServer(options, app).listen(PORT, () => {
+      console.log(`El servidor HTTPS está escuchando en https://localhost:${PORT}`);
     });
   })
   .catch(err => {

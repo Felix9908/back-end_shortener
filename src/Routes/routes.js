@@ -1,5 +1,5 @@
 import express from "express";
-import { login, logOut } from "../Controllers/AuthController.js";
+import { authcheck, login, logOut } from "../Controllers/AuthController.js";
 import { verifyToken } from "../Controllers/Middleware/VerifyToken.js";
 import {
   shorten,
@@ -23,8 +23,9 @@ import {
 const router = express.Router();
 
 // Login routes
-router.post("/login", login); 
-router.put("/logout", verifyToken, logOut);
+router.post("/auth/login", login); 
+router.put("/auth/logout", verifyToken, logOut);
+router.get("/auth/check", authcheck)
 
 // User routes
 router.post("/createAccount", createAccount);

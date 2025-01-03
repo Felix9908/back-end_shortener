@@ -14,7 +14,6 @@ export const login = async (req, res) => {
     const user = await User.findOne({ where: { username } });
 
     if (!user) {
-      // Si el usuario no existe
       return res
         .status(401)
         .json({ success: false, message: "Usuario no encontrado." });
@@ -24,13 +23,12 @@ export const login = async (req, res) => {
     const passwordMatch = bcrypt.compareSync(password, user.password_hash);
 
     if (!passwordMatch) {
-      // Si las contraseñas no coinciden
       return res
         .status(401)
         .json({ success: false, message: "Credenciales incorrectas." });
     }
 
-    // Genera el token JWT e incluye el tipo de usuario (admin o worker)
+    // Genera el token JWT
     const payload = {
       check: true,
       userId: user.id,
@@ -45,10 +43,17 @@ export const login = async (req, res) => {
           .status(500)
           .json({ success: false, message: "Error al generar el token." });
       } else {
+        // Establece el token en una cookie HTTP-only
+        res.cookie("auth_token", token, {
+          httpOnly: true,
+          secure: true, // Cambiar a true en producción si usas HTTPS
+          sameSite: "none", // Configuración para navegación cruzada
+          maxAge: 30 * 24 * 60 * 60 * 1000, // Tiempo de vida de la cookie
+        });
+
         res.status(200).json({
           success: true,
           msg: "AUTENTICACIÓN EXITOSA",
-          token,
           userData: {
             username: user.username,
             email: user.email,
@@ -64,25 +69,44 @@ export const login = async (req, res) => {
 };
 
 export const logOut = (req, res) => {
-  const authHeader = req.headers["authorization"];
+  // Verifica si la cookie está presente
+  const authCookie = req.cookies?.auth_token;
 
-  if (!authHeader) {
-    return res
-      .status(401)
-      .send({ msg: "No se proporcionó token de autenticación" });
+  if (!authCookie) {
+    return res.status(401).json({ msg: "No se encontró cookie de autenticación" });
   }
 
-  // Extraemos el token del encabezado "Bearer token"
-  const token = authHeader.split(" ")[1];
+  try {
+    // Borra la cookie desde el cliente
+    res.clearCookie("auth_token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      path: "/", 
+    });
+    
 
-  // Cambiamos la expiración del token a 1 segundo
-  jwt.sign({ token }, secret_key, { expiresIn: "1s" }, (err, newToken) => {
-    if (err) {
-      res.status(500).send({ msg: "Error al cerrar sesión" });
-    } else {
-      res.status(200).send({
-        msg: "Has sido desconectado",
-      });
-    }
-  });
+    res.status(200).json({ msg: "Has sido desconectado y la cookie ha sido eliminada" });
+  } catch (err) {
+    console.error("Error al cerrar sesión:", err);
+    res.status(500).json({ msg: "Error al cerrar sesión" });
+  }
 };
+
+export const authcheck = (req, res) => {
+  const token = req.cookies.auth_token;
+
+  console.log("este es el toeken: ", token)
+
+  if (!token) {
+    return res.json({ success: false });
+  }
+
+  jwt.verify(token, secret_key, (err, decoded) => {
+    if (err) {
+      return res.json({ success: false });
+    }
+
+    return res.json({ success: true });
+  });
+}

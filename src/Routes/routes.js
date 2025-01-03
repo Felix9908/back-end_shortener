@@ -1,13 +1,29 @@
 import express from "express";
 import { login, logOut } from "../Controllers/AuthController.js";
 import { verifyToken } from "../Controllers/Middleware/VerifyToken.js";
-import { shorten, getAllShortenedUrls, deleteShortenedUrl, editShortenedUrl, redirectToOriginalUrl} from "../Controllers/ShortenController.js";
-import { createAccount, updateUserDetails, toggleUserActiveStatus, deleteUser } from "../Controllers/UserController.js";
-
+import {
+  shorten,
+  getAllShortenedUrls,
+  deleteShortenedUrl,
+  editShortenedUrl,
+  redirectToOriginalUrl,
+} from "../Controllers/ShortenController.js";
+import {
+  createAccount,
+  updateUserDetails,
+  toggleUserActiveStatus,
+  deleteUser,
+} from "../Controllers/UserController.js";
+import {
+  createGeneralInformation,
+  getAllGeneralInformation,
+  updateGeneralInformation,
+  deleteGeneralInformation,
+} from "../Controllers/GeneralInformationController.js";
 const router = express.Router();
 
 // Login routes
-router.post("/login", login);
+router.post("/login", login); 
 router.put("/logout", verifyToken, logOut);
 
 // User routes
@@ -23,4 +39,10 @@ router.delete("/deleteShortenedUrl", verifyToken, deleteShortenedUrl);
 router.put("/editShortenedUrl", verifyToken, editShortenedUrl);
 router.get("/redirect/:shortCode", redirectToOriginalUrl);
 
-export default router; 
+// General Information
+router.post("/CreateGeneralInformation", verifyToken, createGeneralInformation);
+router.get("/GetGeneralInformation", verifyToken, getAllGeneralInformation);
+router.put("/UpdateGeneralInformation/:id", verifyToken, updateGeneralInformation);
+router.delete("/deleteGeneralInformation/:id", verifyToken, deleteGeneralInformation);
+
+export default router;

@@ -11,7 +11,7 @@ module.exports = {
       url_id: { 
         type: Sequelize.INTEGER,
         allowNull: false,
-        unique: true,
+        unique: true, // Cada URL tiene una única entrada en url_stats
         references: {
           model: 'Urls',
           key: 'id'
@@ -19,9 +19,17 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      total_clicks: { 
+      total_views: { 
         type: Sequelize.INTEGER,
         defaultValue: 0
+      },
+      total_earnings: {
+        type: Sequelize.FLOAT,
+        defaultValue: 0.0
+      },
+      is_active: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true
       },
       last_clicked_at: { 
         type: Sequelize.DATE

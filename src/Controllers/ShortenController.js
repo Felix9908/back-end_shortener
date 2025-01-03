@@ -31,21 +31,63 @@ export const shorten = async (req, res) => {
 
 export const redirectToOriginalUrl = async (req, res) => {
   try {
-    const url = await Url.findOne({ where: { shortCode: req.params.shortCode } });
+    // Buscar la URL por el código corto
+    const url = await Url.findOne({ 
+      where: { shortCode: req.params.shortCode },
+      include: [{ model: User, attributes: ['cpm'] }] // Buscar CPM del usuario
+    });
 
     if (!url) return res.status(404).json({ error: "URL no encontrada." });
 
+    // Obtener el país del clic a partir de la IP (supongamos que tenemos un servicio getCountryFromIp)
+    const country = await getCountryFromIp(req.ip);
+
+    // Registrar el clic en la tabla Clicks
     await Click.create({
       url_id: url.id,
       ip_address: req.ip,
       user_agent: req.get("User-Agent"),
+      country: country || 'Unknown', // Guardar el país o 'Unknown' si no se puede determinar
     });
 
-    await UrlStat.increment("total_clicks", { where: { url_id: url.id } });
+    // Actualizar las estadísticas de la URL
+    await UrlStat.increment("total_views", { where: { url_id: url.id } });
+
+    // Obtener el CPM del usuario o de la tabla GeneralInformation si no existe en el usuario
+    let cpm = url.User?.cpm; // Intentar obtener el CPM del usuario
+
+    if (!cpm) {
+      // Si no hay CPM en el usuario, buscar en la tabla GeneralInformation
+      const generalInfo = await GeneralInformation.findOne({
+        attributes: ['cpmGeneral', 'gananciasTotales'] // También obtenemos las ganancias totales
+      });
+
+      if (!generalInfo) return res.status(500).json({ error: "Información general no encontrada." });
+
+      cpm = generalInfo.cpmGeneral; // Usar el CPM general
+    }
+
+    const earnings = cpm / 1000; // Ingresos por mil impresiones, se divide por 1000 para clics individuales
+
+    // Actualizar ganancias en la tabla UrlStat
+    await UrlStat.increment("total_earnings", {
+      by: earnings,
+      where: { url_id: url.id }
+    });
+
+    // Actualizar la columna 'last_clicked_at' en UrlStat
     await UrlStat.update({ last_clicked_at: new Date() }, { where: { url_id: url.id } });
 
+    // Actualizar ganancias totales en la tabla GeneralInformation
+    await GeneralInformation.increment("gananciasTotales", {
+      by: earnings,
+      where: {} // Si solo hay una fila en GeneralInformation, puedes dejar where vacío
+    });
+
+    // Redirigir a la URL original
     return res.status(200).json({ originalUrl: url.originalUrl });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({ error: "Error al procesar la redirección." });
   }
 };

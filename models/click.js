@@ -8,16 +8,34 @@ export default (sequelize, DataTypes) => {
       Click.belongsTo(models.User, { foreignKey: 'userId' });
     }
   }
+
   Click.init({
-    url_id: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER,
-    clicked_at: DataTypes.DATE,
-    ip_address: DataTypes.STRING,
-    user_agent: DataTypes.TEXT
+    url_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+    },
+    clicked_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    ip_address: {
+      type: DataTypes.STRING,
+    },
+    user_agent: {
+      type: DataTypes.TEXT,
+    },
+    country: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    }
   }, {
     sequelize,
     modelName: 'Click',
-    underscored: false, 
+    underscored: false,
   });
+
   return Click;
 };

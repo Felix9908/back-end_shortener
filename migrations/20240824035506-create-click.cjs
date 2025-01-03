@@ -37,6 +37,10 @@ module.exports = {
       user_agent: { 
         type: Sequelize.TEXT
       },
+      country: { 
+        type: Sequelize.STRING,
+        allowNull: true 
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
